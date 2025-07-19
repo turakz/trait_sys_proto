@@ -1,0 +1,41 @@
+# Base style
+BasedOnStyle: LLVM
+
+# Line length
+ColumnLimit: 120
+
+# Bracing rules
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterClass: false
+  AfterControlStatement: true
+  AfterEnum: false
+  AfterFunction: true
+  AfterNamespace: true
+  AfterStruct: false
+  AfterUnion: false
+  BeforeCatch: true
+  BeforeElse: true
+  IndentBraces: false
+  SplitEmptyFunction: false
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: false
+
+# Alignment improvements
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
+
+# Short constructs on single line (only allow inline-only)
+AllowShortFunctionsOnASingleLine: InlineOnly
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+
+# Argument/parameter bin-packing
+BinPackArguments: true
+BinPackParameters: true
+
+# Pointer alignment and spacing preferences
+PointerAlignment: Left
+DerivePointerAlignment: false
+SpacesInParentheses: false
+SpacesInAngles

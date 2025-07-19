@@ -1,0 +1,35 @@
+# build artifacts
+*.o
+*.obj
+*.lo
+*.a
+*.so
+*.dll
+*.dylib
+*.exe
+*.out
+
+# cmake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# build dirs
+build/
+
+# IDEs/editors
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+.DS_Store
+
+# generated files
+compile_commands.json
+.cache
+
+# misc.
+.clang-format
+.clang-tidy
