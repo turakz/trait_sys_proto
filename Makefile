@@ -5,7 +5,10 @@ BUILD_DIR := build
 CXX_LANG_STD := std=c++17
 
 clean:
-	rm compile_commands.json
+	@if [ -e compile_commands.json ]; then \
+		echo "removing compile_commands.json..."; \
+		rm compile_commands.json; \
+	fi
 	rm -rf build
 	rm -rf .cache
 
@@ -59,7 +62,7 @@ test:
 	fi
 	cmake -S. -Bbuild -GNinja
 	cmake --build build
-	@if [ ! -e build/compile_commands.json ]; then \
+	@if [ -e build/compile_commands.json ]; then \
 		echo "creating symlink for build/compile_commands.json..."; \
 		ln -s build/compile_commands.json; \
 	fi
