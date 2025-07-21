@@ -61,7 +61,7 @@ test:
 	cmake --build build
 	@if [ ! -e build/compile_commands.json ]; then \
 		echo "creating symlink for build/compile_commands.json..."; \
-		ln -s /path/to/target your-file; \
+		ln -s build/compile_commands.json; \
 	fi
 
 .PHONY: app

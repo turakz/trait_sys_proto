@@ -7,7 +7,7 @@
 namespace printer {
 // catch-all for unimplemented `T`
 template <typename T>
-std::ostream& print(std::ostream& os, const T& value, fractals::traits::detail::unsupported_tag)
+std::ostream& print(std::ostream& os, const T&, fractals::traits::detail::unsupported_tag)
 {
   return (os << "unsupported dispatch: [unsupported type]");
 }
@@ -135,7 +135,7 @@ std::ostream& print(std::ostream& os, const T& value, fractals::traits::detail::
 
 // union
 template <typename T>
-std::ostream& print(std::ostream& os, const T& value, fractals::traits::detail::union_tag)
+std::ostream& print(std::ostream& os, const T&, fractals::traits::detail::union_tag)
 {
   return (os << "union dispatch: [union]");  // union needs a printer to resolve
                                              // its value

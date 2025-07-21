@@ -24,6 +24,18 @@ enable_testing()
 add_executable(test_main
   main.unit.test.cpp
 )
+target_compile_options(test_main
+  PRIVATE
+    -Wall
+    -Wextra
+    -Wpedantic
+    -Werror
+    -Wconversion
+    -Wshadow
+    -Wfloat-equal
+    -Wundef
+    -Wcast-align
+)
 target_include_directories(test_main
   PUBLIC
     inc
