@@ -55,6 +55,9 @@ typedef struct TestData {
   TestDataEnum enum_v;
   // union type
   TestDataUnion_t union_v;
+
+  bool (*func_ptr)(int, int, int);
+
   // struct dependency
   TestDataDependency_t struct_dep_v;
 } TestData_t;

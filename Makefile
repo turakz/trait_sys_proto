@@ -62,10 +62,6 @@ test:
 	fi
 	cmake -S. -Bbuild -GNinja
 	cmake --build build
-	@if [ -e build/compile_commands.json ]; then \
-		echo "creating symlink for build/compile_commands.json..."; \
-		ln -s build/compile_commands.json; \
-	fi
 
 .PHONY: app
 app: test

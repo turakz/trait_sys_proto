@@ -8,7 +8,7 @@ namespace detail {
 // catch-all
 struct unsupported_tag {};
 
-// primitives
+// fundamental types
 struct int8_tag {};
 struct uint8_tag {};
 struct int16_tag {};
@@ -21,12 +21,13 @@ struct longlong_tag {};
 struct ulonglong_tag {};
 struct bool_tag {};
 struct char_tag {};
+struct const_char_tag {};
 
 // special cases
-struct const_char_tag {};
-struct ptr_tag {};
-struct nullptr_tag {};
 struct void_ptr_tag {};
+struct ptr_tag {};
+struct func_ptr_tag {};
+struct nullptr_tag {};
 struct c_array_tag {};
 struct enum_tag {};
 struct union_tag {};
@@ -108,12 +109,6 @@ struct classify<const char*> {
   using type = const_char_tag;
 };
 
-template <typename T>
-struct classify<T, typename std::enable_if<std::is_pointer<T>::value && !std::is_same<T, const char*>::value &&
-                                           !std::is_void<T>::value>::type> {
-  using type = ptr_tag;
-};
-
 template <>
 struct classify<std::nullptr_t> {
   using type = nullptr_tag;
@@ -122,6 +117,24 @@ struct classify<std::nullptr_t> {
 template <>
 struct classify<void*> {
   using type = void_ptr_tag;
+};
+
+template<typename T>
+struct classify<T, typename std::enable_if<
+    std::is_pointer_v<T>
+    && !std::is_same_v<T, const char*>
+    && !std::is_void_v<T>
+    && !std::is_function_v<std::remove_pointer_t<T>>
+  >::type> {
+  using type = ptr_tag;
+};
+
+template<typename T>
+struct classify<T, typename std::enable_if<
+    std::is_pointer_v<T>
+    && std::is_function_v<std::remove_pointer_t<T>>
+  >::type> {
+  using type = func_ptr_tag;
 };
 
 template <typename T>

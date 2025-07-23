@@ -7,7 +7,7 @@
 namespace printer {
 // catch-all for unimplemented `T`
 template <typename T>
-std::ostream& print(std::ostream& os, const T&, fractals::traits::detail::unsupported_tag)
+std::ostream& print(std::ostream& os, const T& /*value*/, fractals::traits::detail::unsupported_tag)
 {
   return (os << "unsupported dispatch: [unsupported type]");
 }
@@ -86,8 +86,9 @@ inline std::ostream& print(std::ostream& os, const char* value, fractals::traits
 }
 
 // ptr dispatches
+// data ptrs/can be deref'd
 template <typename T>
-std::ostream& print(std::ostream& os, const T* value, fractals::traits::detail::ptr_tag)
+std::ostream& print(std::ostream& os, T* const value, fractals::traits::detail::ptr_tag)
 {
   os << "ptr dispatch: " << value << " -> ";
   if (value)
@@ -99,6 +100,19 @@ std::ostream& print(std::ostream& os, const T* value, fractals::traits::detail::
     os << "nullptr";
   }
   return os;
+}
+
+// func ptrs/cannot be deref'd
+// -> `const T&` as opposed to `const T*` because when `T` is deduced for func ptrs
+// it may introduce a `const` qualifier to the passed in arg that does not have one
+// because `T` is deduced as the (func) ptr itself
+// -> we want the func ptr type, so taking a const reference
+// to that arg preserves the type semantic and gives us the value of the type
+template<typename T>
+std::ostream& print(std::ostream& os, const T& value, fractals::traits::detail::func_ptr_tag)
+{
+  // reinterpret cast to print the address
+  return (os << "func ptr dispatch: " << reinterpret_cast<const void*>(value) << " -> [func_ptr]");
 }
 
 inline std::ostream& print(std::ostream& os, const std::nullptr_t value, fractals::traits::detail::nullptr_tag)

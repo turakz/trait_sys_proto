@@ -286,6 +286,12 @@ TEST_F(TestDataFixture, TestPtrTagNullPtrT)
   ASSERT_EQ(oss.str(), expected.str());
 }
 
+TEST_F(TestDataFixture, TestFuncPtrTag)
+{
+  std::ostringstream oss;
+  printer::print(oss, data.func_ptr, fractals::traits::classify_t<decltype(data.func_ptr)>{});
+}
+
 TEST_F(TestDataFixture, TestVoidPtrTag)
 {
   // TODO(fractals): how to test void ptr?
