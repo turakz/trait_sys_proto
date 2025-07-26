@@ -1,134 +1,215 @@
-#ifndef _PRINTER_HPP
-#define _PRINTER_HPP
-#include <iostream>
-
-#include "lib/FractalsTraits.hpp"
-
+#ifndef _FRACTALS_PRINTER_HPP
+#define _FRACTALS_PRINTER_HPP
+#include <cstring>
+#include <ostream>
+#include "FractalsTraits.hpp"
+namespace fractals {
 namespace printer {
+// simple print impl
+template <typename T_Value>
+inline std::ostream& simplesimple_print(std::ostream& os, const T_Value& value, const char* label, std::size_t spaceCount)
+{
+  if ((std::strcmp(label, "") == 0) && spaceCount == 0)
+  {
+    return (os << value);
+  }
+  return (os << label << ": " << value);
+}
 // catch-all for unimplemented `T`
 template <typename T>
-std::ostream& print(std::ostream& os, const T& /*value*/, fractals::traits::detail::unsupported_tag)
+std::ostream& print(std::ostream& os, const T& /*value*/, const char* label, std::size_t spaceCount,
+                    fractals::traits::detail::unsupported_tag)
 {
-  return (os << "unsupported dispatch: [unsupported type]");
+  if ((std::strcmp(label, "") == 0) && spaceCount == 0)
+  {
+    return (os << "[unsupported type]");
+  }
+  return (os << label << ": [unsupported type]");
 }
-
-// int8_t dispatches
-inline std::ostream& print(std::ostream& os, const std::int8_t value, fractals::traits::detail::int8_tag)
+// int8_t dispatches (promoted to int for printing)
+inline std::ostream& print(std::ostream& os, const int8_t value, const char* label, std::size_t spaceCount,
+                           fractals::traits::detail::int8_tag)
 {
-  // cast to prevent printing as `char`
-  return (os << "int8_t dispatch: " << static_cast<int>(value));
+  return simple_print(os, static_cast<int>(value), label, spaceCount);
 }
-
-inline std::ostream& print(std::ostream& os, const std::uint8_t value, fractals::traits::detail::uint8_tag)
+inline std::ostream& print(std::ostream& os, const uint8_t value, const char* label, std::size_t spaceCount,
+                           fractals::traits::detail::uint8_tag)
 {
-  return (os << "uint8_t dispatch: " << static_cast<unsigned int>(value));
+  return simple_print(os, static_cast<unsigned int>(value), label, spaceCount);
 }
-
 // int16_t dispatches
-inline std::ostream& print(std::ostream& os, const std::int16_t value, fractals::traits::detail::int16_tag)
+inline std::ostream& print(std::ostream& os, const int16_t value, const char* label, std::size_t spaceCount,
+                           fractals::traits::detail::int16_tag)
 {
-  return (os << "int16_t dispatch: " << value);
+  return simple_print(os, value, label, spaceCount);
+}
+inline std::ostream& print(std::ostream& os, const uint16_t value, const char* label, std::size_t spaceCount,
+                           fractals::traits::detail::uint16_tag)
+{
+  return simple_print(os, value, label, spaceCount);
+}
+// int32_t dispatches
+inline std::ostream& print(std::ostream& os, const int32_t value, const char* label, std::size_t spaceCount,
+                           fractals::traits::detail::int32_tag)
+{
+  return simple_print(os, value, label, spaceCount);
+}
+inline std::ostream& print(std::ostream& os, const uint32_t value, const char* label, std::size_t spaceCount,
+                           fractals::traits::detail::uint32_tag)
+{
+  return simple_print(os, value, label, spaceCount);
+}
+// int64_t dispatches
+inline std::ostream& print(std::ostream& os, const int64_t value, const char* label, std::size_t spaceCount,
+                           fractals::traits::detail::int64_tag)
+{
+  return simple_print(os, value, label, spaceCount);
+}
+inline std::ostream& print(std::ostream& os, const uint64_t value, const char* label, std::size_t spaceCount,
+                           fractals::traits::detail::uint64_tag)
+{
+  return simple_print(os, value, label, spaceCount);
+}
+// platform-specific/compiler-specific dispatches
+inline std::ostream& print(std::ostream& os, const long value, const char* label, std::size_t spaceCount,
+                           fractals::traits::detail::long_tag)
+{
+  return simple_print(os, value, label, spaceCount);
+}
+inline std::ostream& print(std::ostream& os, const unsigned long value, const char* label, std::size_t spaceCount,
+                           fractals::traits::detail::ulong_tag)
+{
+  return simple_print(os, value, label, spaceCount);
+}
+inline std::ostream& print(std::ostream& os, const wchar_t value, const char* label, std::size_t spaceCount,
+                           fractals::traits::detail::wchar_tag)
+{
+  // wchar_t prints its numeric value by default to std::ostream
+  return simple_print(os, static_cast<long>(value), label, spaceCount);
+}
+inline std::ostream& print(std::ostream& os, const size_t value, const char* label, std::size_t spaceCount,
+                           fractals::traits::detail::size_t_tag)
+{
+  return simple_print(os, value, label, spaceCount);
+}
+inline std::ostream& print(std::ostream& os, const ptrdiff_t value, const char* label, std::size_t spaceCount,
+                           fractals::traits::detail::ptrdiff_t_tag)
+{
+  return simple_print(os, value, label, spaceCount);
+}
+// overlapping dispatches
+inline std::ostream& print(std::ostream& os, const long long value, const char* label, std::size_t spaceCount,
+                           fractals::traits::detail::longlong_tag)
+{
+  return simple_print(os, value, label, spaceCount);
 }
 
-inline std::ostream& print(std::ostream& os, const std::uint16_t value, fractals::traits::detail::uint16_tag)
+inline std::ostream& print(std::ostream& os, const unsigned long long value, const char* label, std::size_t spaceCount,
+                           fractals::traits::detail::ulonglong_tag)
 {
-  return (os << "uint16_t dispatch: " << value);
+  return simple_print(os, value, label, spaceCount);
 }
 
-// int32_t dispatches (int is aliased as in32_t on most platforms)
-inline std::ostream& print(std::ostream& os, const int32_t value, fractals::traits::detail::int32_tag)
+inline std::ostream& print(std::ostream& os, const long double value, const char* label, std::size_t spaceCount,
+                           fractals::traits::detail::long_double_tag)
 {
-  return (os << "int32_t dispatch: " << value);
+  return simple_print(os, value, label, spaceCount);
 }
-
-inline std::ostream& print(std::ostream& os, const uint32_t value, fractals::traits::detail::uint32_tag)
+// distinct dispatches (generally)
+inline std::ostream& print(std::ostream& os, const bool value, const char* label, std::size_t spaceCount,
+                           fractals::traits::detail::bool_tag)
 {
-  return (os << "uint32_t dispatch: " << value);
+  if ((std::strcmp(label, "") == 0) && spaceCount == 0)
+  {
+    return (os << std::boolalpha << value << std::noboolalpha);
+  }
+  return (os << label << ": " << std::boolalpha << value << std::noboolalpha);
 }
-
-// int64_t dispatches (long is aliased as int64_t on most platforms)
-inline std::ostream& print(std::ostream& os, const std::int64_t value, fractals::traits::detail::int64_tag)
-{
-  return (os << "int64_t dispatch: " << value);
-}
-
-inline std::ostream& print(std::ostream& os, const std::uint64_t value, fractals::traits::detail::uint64_tag)
-{
-  return (os << "uint64_t dispatch: " << value);
-}
-
-// long long dispatches (no alias here)
-inline std::ostream& print(std::ostream& os, const long long value, fractals::traits::detail::longlong_tag)
-{
-  return (os << "long long dispatch: " << value);
-}
-
-inline std::ostream& print(std::ostream& os, const unsigned long long value, fractals::traits::detail::ulonglong_tag)
-{
-  return (os << "unsigned long long dispatch: " << value);
-}
-
-// bool dispatch
-inline std::ostream& print(std::ostream& os, const bool value, fractals::traits::detail::bool_tag)
-{
-  return (os << "bool dispatch: " << (value ? "true" : "false"));
-}
-
 // char dispatches
-inline std::ostream& print(std::ostream& os, const char value, fractals::traits::detail::char_tag)
+inline std::ostream& print(std::ostream& os, const char value, const char* label, std::size_t spaceCount,
+                           fractals::traits::detail::char_tag)
 {
-  return (os << "char dispatch: \'" << value << "\'");
+  if ((std::strcmp(label, "") == 0) && spaceCount == 0)
+  {
+    return (os << "\'" << value << "\'");
+  }
+  return (os << label << ": \'" << value << "\'");
 }
-
-inline std::ostream& print(std::ostream& os, const char* value, fractals::traits::detail::const_char_tag)
+inline std::ostream& print(std::ostream& os, const char* value, const char* label, std::size_t spaceCount,
+                           fractals::traits::detail::const_char_tag)
 {
-  return (os << "const char* dispatch: \"" << value << "\"");
+  if ((std::strcmp(label, "") == 0) && spaceCount == 0)
+  {
+    return (os << "\"" << (value ? value : "(null)") << "\"");
+  }
+  return (os << label << ": \"" << (value ? value : "(null)") << "\"");
 }
-
-// ptr dispatches
-// data ptrs/can be deref'd
+inline std::ostream& print(std::ostream& os, const float value, const char* label, std::size_t spaceCount,
+                           fractals::traits::detail::float_tag)
+{
+  return simple_print(os, value, label, spaceCount);
+}
+inline std::ostream& print(std::ostream& os, const double value, const char* label, std::size_t spaceCount,
+                           fractals::traits::detail::double_tag)
+{
+  return simple_print(os, value, label, spaceCount);
+}
+// ptr dispatches: void ptr, data ptr, func ptr
+inline std::ostream& print(std::ostream& os, const void* value, const char* label, std::size_t spaceCount,
+                           fractals::traits::detail::void_ptr_tag)
+{
+  if ((std::strcmp(label, "") == 0) && spaceCount == 0)
+  {
+    return (os << value << " -> void");
+  }
+  return (os << label << ": " << value << " -> void");
+}
 template <typename T>
-std::ostream& print(std::ostream& os, T* const value, fractals::traits::detail::ptr_tag)
+std::ostream& print(std::ostream& os, const T* value, const char* label, std::size_t spaceCount,
+                    fractals::traits::detail::ptr_tag)
 {
-  os << "ptr dispatch: " << value << " -> ";
+  if ((std::strcmp(label, "") == 0) && spaceCount == 0)
+  {
+    os << value << " -> ";
+  }
+  else
+  {
+    os << label << ": " << value << " -> ";
+  }
   if (value)
   {
     os << (*value);
   }
   else
   {
-    os << "nullptr";
+    os << "NULL";
   }
   return os;
 }
-
-// func ptrs/cannot be deref'd
-// -> `const T&` as opposed to `const T*` because when `T` is deduced for func ptrs
-// it may introduce a `const` qualifier to the passed in arg that does not have one
-// because `T` is deduced as the (func) ptr itself
-// -> we want the func ptr type, so taking a const reference
-// to that arg preserves the type semantic and gives us the value of the type
-template<typename T>
-std::ostream& print(std::ostream& os, const T& value, fractals::traits::detail::func_ptr_tag)
+template <typename T>
+std::ostream& print(std::ostream& os, const T& value, const char* label, std::size_t spaceCount,
+                    fractals::traits::detail::func_ptr_tag)
 {
-  // reinterpret cast to print the address
-  return (os << "func ptr dispatch: " << reinterpret_cast<const void*>(value) << " -> [func_ptr]");
+  if ((std::strcmp(label, "") == 0) && spaceCount == 0)
+  {
+    return (os << reinterpret_cast<const void*>(value) << " -> [func_ptr]");
+  }
+  return (os << label << ": " << reinterpret_cast<const void*>(value) << " -> [func_ptr]");
 }
-
-inline std::ostream& print(std::ostream& os, const std::nullptr_t value, fractals::traits::detail::nullptr_tag)
-{
-  return (os << "nullptr_t dispatch: " << value);
-}
-
-inline std::ostream& print(std::ostream& os, const void* value, fractals::traits::detail::void_ptr_tag)
-{
-  return (os << "void ptr dispatch: " << value);
-}
-
+// c-array dispatch
 template <typename T, std::size_t Extent>
-std::ostream& print(std::ostream& os, const T (&arr)[Extent], fractals::traits::detail::c_array_tag)
+std::ostream& print(std::ostream& os, const T (&arr)[Extent], const char* label, std::size_t spaceCount,
+                    fractals::traits::detail::c_array_tag)
 {
-  os << "c_array dispatch: " << arr << " -> {";
+  if ((std::strcmp(label, "") == 0) && spaceCount == 0)
+  {
+    // cast to void* to ensure address is printed for char arrays, not string content
+    os << static_cast<const void*>(arr) << "{";
+  }
+  else
+  {
+    os << label << ": " << static_cast<const void*>(arr) << " -> {";
+  }
   for (std::size_t idx = 0; idx < Extent; ++idx)
   {
     os << arr[idx];
@@ -137,23 +218,32 @@ std::ostream& print(std::ostream& os, const T (&arr)[Extent], fractals::traits::
       os << ", ";
     }
   }
-  os << "}";
-  return os;
+  return os << "}";
 }
-
+// enum dispatch
 template <typename T>
-std::ostream& print(std::ostream& os, const T& value, fractals::traits::detail::enum_tag)
+std::ostream& print(std::ostream& os, const T& value, const char* label, std::size_t spaceCount,
+                    fractals::traits::detail::enum_tag)
 {
-  return (os << "enum dispatch: " << value);  // how do enums work? can they be expanded easily or need printer?
+  return simple_print(os, static_cast<typename std::underlying_type<T>::type>(value), label, spaceCount);
 }
-
-// union
+// union dispatch
 template <typename T>
-std::ostream& print(std::ostream& os, const T&, fractals::traits::detail::union_tag)
+std::ostream& print(std::ostream& os, const T& /*value*/, const char* label, std::size_t spaceCount,
+                    fractals::traits::detail::union_tag)
 {
-  return (os << "union dispatch: [union]");  // union needs a printer to resolve
-                                             // its value
+  if ((std::strcmp(label, "") == 0) && spaceCount == 0)
+  {
+    return (os << "[union]");
+  }
+  return (os << label << ": [union]");
 }
-
-};  // namespace printer
+// default dispatch
+template <typename T>
+std::ostream& print(std::ostream& os, const T& value, const char* label = "", std::size_t spaceCount = 0)
+{
+  return fractals::printer::print(os, value, label, spaceCount, fractals::traits::classify_t<T>{});
+}
+}; // namespace printer
+}; // namespace fractals
 #endif
