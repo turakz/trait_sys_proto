@@ -211,9 +211,8 @@ template <typename T> struct classify<T, typename std::enable_if<std::is_union_v
 template <typename T> struct classify<T, typename std::enable_if<std::is_enum_v<T>>::type> {
   using type = enum_tag;
 };
-
 } // namespace detail
-// Public type alias for convenience
+// public alias
 template <typename T> using classify_t = typename detail::classify<T>::type;
 }; // namespace traits
 }; // namespace fractals
